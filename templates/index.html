@@ -1,0 +1,58 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID-19 Forecast</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body style="background-color: #87CEEB; color: #333; font-family: Arial, sans-serif;">
+
+    <div style="margin: 20px;">
+        <h1 style="color: #333;">COVID-19 Forecast</h1>
+        <div>
+            <h2>Forecast Table</h2>
+            <table id="forecast-table" style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <!-- Table rows will be populated dynamically -->
+            </table>
+        </div>
+        <div>
+            <h2>Forecast Plot</h2>
+            <canvas id="forecast-chart" width="800" height="400" style="border: 1px solid #ddd;"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Extract data from Flask app
+        const predData = {{ pred | tojson | safe }};
+
+        // Populate the table
+        const table = document.getElementById('forecast-table');
+        const tableHead = table.createTHead();
+        const headRow = tableHead.insertRow(0);
+        headRow.innerHTML = `<th style="padding: 10px; border: 2px solid #333;">Date</th><th style="padding: 10px; border: 2px solid #333;">New Cases</th>`;
+
+        predData.forEach((row, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td style="padding: 10px; border: 1px solid #ddd;">${row.date}</td><td style="padding: 10px; border: 1px solid #ddd;">${row.new_cases}</td>`;
+            table.appendChild(tr);
+        });
+
+        // Plot the time series
+        const ctx = document.getElementById('forecast-chart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: predData.map(row => row.date),
+                datasets: [{
+                    label: 'Forecasted Cases',
+                    borderColor: 'red',
+                    data: predData.map(row => row.new_cases),
+                }]
+            },
+        });
+    </script>
+</body>
+</html>
