@@ -16,7 +16,7 @@ This project is a COVID-19 forecasting application that predicts the number of n
 1. Clone the repository to your local machine:
 
     ```bash
-    git clone https://github.com/your-username/Pandemic-Forecasting.git
+    git clone https://github.com/TheDeacon246/Pandemic-Forecasting.git
     cd Pandemic-Forecasting
     ```
 
